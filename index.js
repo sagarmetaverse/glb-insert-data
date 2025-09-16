@@ -1,5 +1,6 @@
 import { NodeIO } from '@gltf-transform/core';
 import { dedup } from '@gltf-transform/functions';
+import { execSync } from 'child_process';
 
 
 async function addMetadataToGLB(inputPath, outputPath, userId) {
@@ -8,23 +9,27 @@ async function addMetadataToGLB(inputPath, outputPath, userId) {
         // Read the GLB file
         const document = await io.read(inputPath);
 
-        // Set the custom metadata in asset.extras (global metadata)
+        // Read VC from vc.js output
         const asset = document.getRoot().getAsset();
-        asset.extras = {
-            avatarIdentity: {
-                "did": "did:key:z6Mkniu3AZvAt7EgsB47xN9pH4Z4DarA3YFS5Wn17vuAjPff",
-                "identityType": "SSI Avatar",
-                "verifiableCredential": {
-                    "@context": ["https://www.w3.org/2018/credentials/v1"],
-                    "type": ["VerifiableCredential", "AvatarCredential"],
-                    "credentialSubject": {
-                        "id": "did:key:z6Mkniu3AZvAt7EgsB47xN9pH4Z4DarA3YFS5Wn17vuAjPff",
-                        "modelHash": "sha256:deadbeefcafebabefeedface1234567890abcdef1234567890abcdef1234567890ab",
-                        "issuedFor": "OpenMetaverse"
-                    }
+            let vcJwt;
+        try {
+                // vc.js should output the JWT string only
+                vcJwt = execSync('node vc.js', { encoding: 'utf8' }).trim();
+        } catch (err) {
+                console.error('Error generating VC JWT:', err.message);
+            process.exit(1);
+        }
+        
+        // Extract DID from the VC.js file
+        const did = 'did:key:z6Mkg3CQtXGbPTQiypAMfgcUNBxWnLe6ka4JK6nMCyHSu9w8';
+        
+            asset.extras = {
+                avatarIdentity: {
+                    did: did,
+                    identityType: 'SSI Avatar',
+                    verifiableCredential: vcJwt
                 }
-            }
-        };
+            };
 
         // Optional: Optimize the file
         await document.transform(dedup());

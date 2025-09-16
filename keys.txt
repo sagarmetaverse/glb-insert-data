@@ -1,0 +1,4 @@
+DID: did:key:z6Mkg3CQtXGbPTQiypAMfgcUNBxWnLe6ka4JK6nMCyHSu9w8
+Public Key (base58btc): z6Mkg3CQtXGbPTQiypAMfgcUNBxWnLe6ka4JK6nMCyHSu9w8
+Private Key (base64): z0tkhTxKEkpAy6NYT4Rqk9Yosq75EAqiPvFzljiZHqkXjVOqei37Tu2w58px7uGxR8Gt17VtQ6mnxnJQtHXxkw==
+
