@@ -12,6 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "@gltf-transform/core": "^4.2.1",
-    "@gltf-transform/functions": "^4.2.1"
+    "@gltf-transform/functions": "^4.2.1",
+    "@stablelib/ed25519": "^2.0.2",
+    "bs58": "^6.0.0",
+    "did-resolver": "^4.1.0",
+    "key-did-resolver": "^4.0.0",
+    "uninstall": "^0.0.0"
   }
 }

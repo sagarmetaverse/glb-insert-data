@@ -11,16 +11,23 @@ async function addMetadataToGLB(inputPath, outputPath, userId) {
         // Set the custom metadata in asset.extras (global metadata)
         const asset = document.getRoot().getAsset();
         asset.extras = {
-            uniqueIdentity: {
-                userId: userId,
-                creationDate: new Date().toISOString(),
-                creator: "My Avatar System",
-                // ... any other data
+            avatarIdentity: {
+                "did": "did:key:z6Mkniu3AZvAt7EgsB47xN9pH4Z4DarA3YFS5Wn17vuAjPff",
+                "identityType": "SSI Avatar",
+                "verifiableCredential": {
+                    "@context": ["https://www.w3.org/2018/credentials/v1"],
+                    "type": ["VerifiableCredential", "AvatarCredential"],
+                    "credentialSubject": {
+                        "id": "did:key:z6Mkniu3AZvAt7EgsB47xN9pH4Z4DarA3YFS5Wn17vuAjPff",
+                        "modelHash": "sha256:deadbeefcafebabefeedface1234567890abcdef1234567890abcdef1234567890ab",
+                        "issuedFor": "OpenMetaverse"
+                    }
+                }
             }
         };
 
-    // Optional: Optimize the file
-    await document.transform(dedup());
+        // Optional: Optimize the file
+        await document.transform(dedup());
 
         // Write the modified GLB back to a file
         await io.write(outputPath, document);
@@ -32,10 +39,10 @@ async function addMetadataToGLB(inputPath, outputPath, userId) {
 }
 
 
-// Command-line usage: node index.js <inputPath> <outputPath> <userId>
-const [,, inputPath, outputPath, userId] = process.argv;
-if (!inputPath || !outputPath || !userId) {
-    console.error('Usage: node index.js <inputPath> <outputPath> <userId>');
+// Command-line usage: node index.js <inputPath> <outputPath>
+const [, , inputPath, outputPath] = process.argv;
+if (!inputPath || !outputPath) {
+    console.error('Usage: node index.js <inputPath> <outputPath> ');
     process.exit(1);
 }
-addMetadataToGLB(inputPath, outputPath, userId);
+addMetadataToGLB(inputPath, outputPath);
